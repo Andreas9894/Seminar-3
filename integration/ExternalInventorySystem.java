@@ -17,7 +17,7 @@ public class ExternalInventorySystem {
 
 
     /**
-     * Adds three specific items to the external inventory system
+     * Adds two specific items to the external inventory system
      */
     public ExternalInventorySystem () {
         items.add(new ItemDTO("choklad231", 0.2, "Daimchoklad", 15));
@@ -58,6 +58,4 @@ public class ExternalInventorySystem {
 
     }
     
-   
-
 }
