@@ -3,7 +3,8 @@ package se.kth.iv1350.integration;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.kth.iv1350.controller.InvalidItemIDException;
+import se.kth.iv1350.controller.ConnectionException;
+import se.kth.iv1350.controller.ItemIDException;
 import se.kth.iv1350.model.Sale;
 import se.kth.iv1350.model.SoldItem;
 
@@ -30,14 +31,18 @@ public class ExternalInventorySystem {
      * Searches the external inventory system for a matching itemID and returns it if found.
      * @param itemID the specified item's itemID
      * @return
+     * @throws ItemIDException if an item with the matching itemID can not be found.
+     * @throws ConnectionException if a connection to the servers can't be established.
      */
-    public ItemDTO getItem (String itemID) throws InvalidItemIDException{
-
-        for(ItemDTO item :items ) {
-            if(item.getItemID() .equals(itemID))
-                return item;
-        }
-        throw new InvalidItemIDException ("Could not find item with Item ID :" + itemID);
+    public ItemDTO getItem (String itemID) throws ItemIDException, ConnectionException{
+            for(ItemDTO item :items ) {
+                if(item.getItemID() .equals(itemID))
+                    return item;  
+             }
+             
+             if ("fail".equals(itemID))
+                throw new ConnectionException ("Can't connect to servers.");
+             throw new ItemIDException("\"" + itemID +"\" " +  "could not be found.");
     }
     /**
      * Updates the quantity of the item remaining in the storage after customer has purchased items.
