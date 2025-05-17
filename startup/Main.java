@@ -19,7 +19,8 @@ public class Main {
         IntegrationCreator creator = new IntegrationCreator(); 
         Register register = new Register();
         Controller contr = new Controller(creator, register);
-        new View(contr).trialExecution();
+        ErrorMessageHandler errorMessageHandler = new ErrorMessageHandler();
+        new View(contr, errorMessageHandler).trialExecution();
     }
 
 }
