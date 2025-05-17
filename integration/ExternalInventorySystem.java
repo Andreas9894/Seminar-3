@@ -3,8 +3,9 @@ package se.kth.iv1350.integration;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Sale;
-import model.SoldItem;
+import se.kth.iv1350.controller.InvalidItemIDException;
+import se.kth.iv1350.model.Sale;
+import se.kth.iv1350.model.SoldItem;
 
 /**
  * This contains the item description, itemID, price, tax rate.
@@ -30,13 +31,13 @@ public class ExternalInventorySystem {
      * @param itemID the specified item's itemID
      * @return
      */
-    public ItemDTO getItem (String itemID){
+    public ItemDTO getItem (String itemID) throws InvalidItemIDException{
 
         for(ItemDTO item :items ) {
             if(item.getItemID() .equals(itemID))
                 return item;
         }
-        return null;
+        throw new InvalidItemIDException ("Could not find item with Item ID :" + itemID);
     }
     /**
      * Updates the quantity of the item remaining in the storage after customer has purchased items.
