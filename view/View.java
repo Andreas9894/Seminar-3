@@ -1,26 +1,43 @@
 package se.kth.iv1350.view;
-import controller.Controller;
+
+import java.util.LinkedList;
+
+import se.kth.iv1350.controller.ConnectionException;
+import se.kth.iv1350.controller.Controller;
+import se.kth.iv1350.controller.ItemIDException;
 
 /**
  * This is a placeholder for the actual view. it contains calls to all system operations in the controller 
  */
 public class View {
     private Controller contr;
+    private ErrorMessageHandler errorMessageHandler;
 
-    public View (Controller contr){
+    public View (Controller contr, ErrorMessageHandler errorMessageHandler){
         this.contr = contr;
+        this.errorMessageHandler = errorMessageHandler;
     }
 
     public void trialExecution () {
-        String existingID = "choklad231";
-        String testID = "brod332";
 
+        LinkedList <String> items = new LinkedList<String>();
+        items.add("choklad231");
+        items.add("brod332");
+        items.add("choklad231");
+        //items.add("laptop642");
+        //items.add("fail");
 
         contr.startSale();
-        contr.scanItem(existingID);
-        contr.scanItem(existingID);
-        contr.scanItem(testID);
-        contr.scanItem(testID);
+        try {
+            for (String item : items){
+                contr.scanItem(item);
+            }    
+         } catch (ItemIDException e) {
+            errorMessageHandler.showErrorMessage(e.getMessage());
+        } catch (ConnectionException e) {
+            errorMessageHandler.showErrorMessage(e.getMessage());
+        }
+        
     
 
         contr.endSale();
@@ -30,9 +47,5 @@ public class View {
         contr.customerPaysAmount(correctAmount);
         
     }
-
-
-
-        
 
 }
