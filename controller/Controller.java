@@ -8,6 +8,7 @@ import se.kth.iv1350.integration.ItemDTO;
 import se.kth.iv1350.integration.Printer;
 import se.kth.iv1350.model.Register;
 import se.kth.iv1350.model.Sale;
+import se.kth.iv1350.view.ErrorMessageHandler;
 
 /**
  * This is the only controller in the application and all 
@@ -22,6 +23,7 @@ public class Controller {
     private Printer printer;
     private Register register;
     private double finalChange;
+    private ErrorMessageHandler errorMessageHandler;
 
     /**
      * Initialises the sale.
@@ -30,6 +32,7 @@ public class Controller {
     public void startSale(){
         this.sale = new Sale();
         this.printer = new Printer();
+        this.errorMessageHandler = new ErrorMessageHandler();
     }
     /**
      * Calls on another method to instantiate the external accounting system, external inventory system and the discount database.
@@ -50,24 +53,25 @@ public class Controller {
     * @return
     */
 
-    public void scanItem (String itemID) throws ItemIDException, ConnectionException{
-        
+    public void scanItem (String itemID) {
+           
+        try {
             ItemDTO foundItem = extInvSys.getItem(itemID);
             sale.addItemToItemList(foundItem);
             sale.displaySaleInfo(foundItem);
+          
+        } catch (ItemIDException e) {
+            errorMessageHandler.showErrorMessage(e.getMessage());
+        } catch (ConnectionException e) {
+            errorMessageHandler.showErrorMessage(e.getMessage());
+        }
     
-        
-
     }
 
     private void updateExternalSystems(Sale sale){
         extAccSys.updateAccounting(sale.getRunningTotal());
         register.updateRegister(sale.getRunningTotal());
         extInvSys.updateExtInvSys(sale);
-
-        //FIX THIS 
-        //extInvSys.updateExtInvSys(getQuantity);
-
 
     }
 
@@ -93,10 +97,5 @@ public class Controller {
         printReceipt(amountPaid);
 
     }
-
-    
-
-    
-
 
 }
