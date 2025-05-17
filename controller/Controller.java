@@ -1,13 +1,13 @@
 package se.kth.iv1350.controller;
 
-import integration.DiscountDatabase;
-import integration.ExternalAccountingSystem;
-import integration.ExternalInventorySystem;
-import integration.IntegrationCreator;
-import integration.ItemDTO;
-import integration.Printer;
-import model.Register;
-import model.Sale;
+import se.kth.iv1350.integration.DiscountDatabase;
+import se.kth.iv1350.integration.ExternalAccountingSystem;
+import se.kth.iv1350.integration.ExternalInventorySystem;
+import se.kth.iv1350.integration.IntegrationCreator;
+import se.kth.iv1350.integration.ItemDTO;
+import se.kth.iv1350.integration.Printer;
+import se.kth.iv1350.model.Register;
+import se.kth.iv1350.model.Sale;
 
 /**
  * This is the only controller in the application and all 
@@ -50,14 +50,12 @@ public class Controller {
     * @return
     */
 
-    public void scanItem (String itemID){
-        try {
+    public void scanItem (String itemID) throws ItemIDException, ConnectionException{
+        
             ItemDTO foundItem = extInvSys.getItem(itemID);
             sale.addItemToItemList(foundItem);
             sale.displaySaleInfo(foundItem);
-        } catch (Exception InvalidItemIDException){
-            System.out.println(InvalidItemIDException.getMessage());
-        }
+    
         
 
     }
