@@ -51,9 +51,13 @@ public class Controller {
     */
 
     public void scanItem (String itemID){
-        ItemDTO foundItem = extInvSys.getItem(itemID);
-        sale.addItemToItemList(foundItem);
-        sale.displaySaleInfo(foundItem);
+        try {
+            ItemDTO foundItem = extInvSys.getItem(itemID);
+            sale.addItemToItemList(foundItem);
+            sale.displaySaleInfo(foundItem);
+        } catch (Exception InvalidItemIDException){
+            System.out.println(InvalidItemIDException.getMessage());
+        }
         
 
     }
