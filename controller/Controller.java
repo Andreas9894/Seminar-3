@@ -57,9 +57,10 @@ public class Controller {
     * Searches the external inventory for the specified item and adds it to the sale.
     * @param itemID is the itemID of the specified item.
     * @return
+ * @throws Exception 
     */
 
-    public void scanItem (String itemID) {
+    public void scanItem  (String itemID) throws Exception {
            
         try {
             ItemDTO foundItem = extInvSys.getItem(itemID);
@@ -67,12 +68,12 @@ public class Controller {
             sale.displaySaleInfo(foundItem);
           
          } catch (ItemIDException e) {
-            errorMessageHandler.showErrorMessage(e.getMessage());
+            throw e;
         } 
             
          catch (Exception e ){
-            errorMessageHandler.showErrorMessage(e.getMessage());
             logHandler.logException(e);
+            throw e;
             
         }
     }
