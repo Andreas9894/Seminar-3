@@ -37,27 +37,34 @@ public class ControllerTest {
 }
 
     @Test
-    void testScanItemInvalidItemIDPrintsErrorMessage() {
-        controller.scanItem("laptop642");
+    void testScanInvalidItem () {
+        String invalidItemID = "laptop642";
 
-        String output = outContent.toString();
-        assertTrue(output.contains("could not be found"),
-            "Expected error message about missing item ID");
+        ItemIDException e = assertThrows(ItemIDException.class ,() -> {controller.scanItem(invalidItemID);}, 
+        "Expected ItemIDException when scanning an invalid item");
     }
 
     @Test
     void testScanItemConnectionExceptionPrintsAndLogs() {
-        controller.scanItem("fail");
 
-        String output = outContent.toString();
-        assertTrue(output.contains("Can't connect to servers."),
-            "Expected error message about server connection");
+        String connectionError = "fail";
+
+        ConnectionException e = assertThrows(ConnectionException.class ,() -> {controller.scanItem(connectionError);}, 
+        "Expected ConnectionException when scanning \"fail\" ");
+        
+
+       
     }
+
 
     @Test
     void testScanItemValidItemNoErrorOutput() {
-        controller.scanItem("choklad231");
 
+        String validItemID = "choklad231";
+        assertDoesNotThrow (() -> {controller.scanItem(validItemID);},
+        "Expected no exception when scanning valid item"); 
+      
+        
         String output = outContent.toString();
         assertFalse(output.contains("Error:"), 
             "No error message expected for valid item");
@@ -65,3 +72,4 @@ public class ControllerTest {
             "No exception should be logged for valid item");
     }
 }
+
