@@ -1,6 +1,6 @@
 package se.kth.iv1350.model;
 
-import integration.ItemDTO;
+import se.kth.iv1350.integration.ItemDTO;
 
 public class SoldItem {
 
