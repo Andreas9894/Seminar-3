@@ -1,13 +1,16 @@
 package se.kth.iv1350.controller;
 
-import integration.DiscountDatabase;
-import integration.ExternalAccountingSystem;
-import integration.ExternalInventorySystem;
-import integration.IntegrationCreator;
-import integration.ItemDTO;
-import integration.Printer;
-import model.Register;
-import model.Sale;
+import se.kth.iv1350.integration.DiscountDatabase;
+import se.kth.iv1350.integration.ExternalAccountingSystem;
+import se.kth.iv1350.integration.ExternalInventorySystem;
+import se.kth.iv1350.integration.IntegrationCreator;
+import se.kth.iv1350.integration.ItemDTO;
+import se.kth.iv1350.integration.Printer;
+import se.kth.iv1350.model.Register;
+import se.kth.iv1350.model.RevenueObserver;
+import se.kth.iv1350.model.Sale;
+import se.kth.iv1350.util.LogHandler;
+import se.kth.iv1350.view.ErrorMessageHandler;
 
 /**
  * This is the only controller in the application and all 
@@ -22,6 +25,8 @@ public class Controller {
     private Printer printer;
     private Register register;
     private double finalChange;
+    private ErrorMessageHandler errorMessageHandler;
+    private LogHandler logHandler;
 
     /**
      * Initialises the sale.
@@ -30,6 +35,7 @@ public class Controller {
     public void startSale(){
         this.sale = new Sale();
         this.printer = new Printer();
+        this.errorMessageHandler = new ErrorMessageHandler();
     }
     /**
      * Calls on another method to instantiate the external accounting system, external inventory system and the discount database.
@@ -41,6 +47,9 @@ public class Controller {
         this.extInvSys = creator.getExternalInventorySystem();
         this.discountDB = creator.getDiscountDatabase();
         this.register = register;
+        this.logHandler = new LogHandler();
+     
+        
     
     }
 
@@ -50,12 +59,22 @@ public class Controller {
     * @return
     */
 
-    public void scanItem (String itemID){
-        ItemDTO foundItem = extInvSys.getItem(itemID);
-        sale.addItemToItemList(foundItem);
-        sale.displaySaleInfo(foundItem);
-        
-
+    public void scanItem (String itemID) {
+           
+        try {
+            ItemDTO foundItem = extInvSys.getItem(itemID);
+            sale.addItemToItemList(foundItem);
+            sale.displaySaleInfo(foundItem);
+          
+         } catch (ItemIDException e) {
+            errorMessageHandler.showErrorMessage(e.getMessage());
+        } 
+            
+         catch (Exception e ){
+            errorMessageHandler.showErrorMessage(e.getMessage());
+            logHandler.logException(e);
+            
+        }
     }
 
     private void updateExternalSystems(Sale sale){
@@ -63,22 +82,21 @@ public class Controller {
         register.updateRegister(sale.getRunningTotal());
         extInvSys.updateExtInvSys(sale);
 
-        //FIX THIS 
-        //extInvSys.updateExtInvSys(getQuantity);
-
-
     }
 
     private void printReceipt (double amountPaid){
        printer.printReceipt(amountPaid, finalChange, sale);
 
     }
+    public void addRevenueObserver(RevenueObserver obs){
+        sale.addRevenueObserver(obs);
+    }
 
     /**
      * Ends the sale, adds the current time to the sale class and prints the total cost.
      */
     public void endSale (){
-        sale.addFinalTimeOfSale(sale);
+        sale.endSale(sale);
         System.out.println("Final Total including VAT : " + sale.getRunningTotal());
     }
 
@@ -91,10 +109,5 @@ public class Controller {
         printReceipt(amountPaid);
 
     }
-
-    
-
-    
-
 
 }
