@@ -2,8 +2,8 @@ package se.kth.iv1350.integration;
 
 import java.util.List;
 
-import model.Sale;
-import model.SoldItem;
+import se.kth.iv1350.model.Sale;
+import se.kth.iv1350.model.SoldItem;
 
 public class Printer {
 
