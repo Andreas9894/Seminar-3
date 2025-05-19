@@ -1,9 +1,9 @@
 package se.kth.iv1350.startup;
 
-import controller.Controller;
-import integration.IntegrationCreator;
-import model.Register;
-import view.View;
+import se.kth.iv1350.controller.Controller;
+import se.kth.iv1350.integration.IntegrationCreator;
+import se.kth.iv1350.model.Register;
+import se.kth.iv1350.view.View;
 
 /**
  * Starts the entire application. Contains the main method used to start the application.
