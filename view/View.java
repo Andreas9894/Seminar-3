@@ -45,7 +45,6 @@ public class View {
                 continue;
             } catch (Exception e){
                 errorMessageHandler.showErrorMessage(e.getMessage());
-                System.exit(1);
 
             }
             }    
